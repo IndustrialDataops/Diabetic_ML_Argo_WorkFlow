@@ -43,7 +43,7 @@ Containers:
       - "./synthea-with-dependencies.jar"
       - "-c"
       - "./synthea.properties"
-      - p
+      - "-p"
       - '{{inputs.parameters.population}}'
     mount: mounted
     mountName: data-storage
