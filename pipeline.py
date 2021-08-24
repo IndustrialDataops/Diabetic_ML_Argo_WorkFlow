@@ -6,7 +6,7 @@ tasks = taskFlow()
 tasks.addJob(
     name="generateSyntheticData",
     template="synthea",
-    parameters=[{"name": "population", "value": "10"}],
+    parameters=[{"name": "population", "value": "1000000"}],
 )
 
 tasks.addJob(
