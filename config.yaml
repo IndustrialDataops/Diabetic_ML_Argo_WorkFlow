@@ -1,0 +1,60 @@
+Containers:
+  - name: pyspark
+    image: 'pyspark:3.1.2'
+    parameters:
+      - name: observations
+      - name: patients
+      - name: conditions
+      - name: target
+    command:
+      - spark-submit
+      - mounted/transformData.py
+      - '-o'
+      - '{{inputs.parameters.observations}}'
+      - '-p'
+      - '{{inputs.parameters.patients}}'
+      - '-c'
+      - '{{inputs.parameters.conditions}}'
+      - '-t'
+      - '{{inputs.parameters.target}}'
+    mount: mounted
+    mountName: data-storage
+  - name : scikit
+    image : python_scikit:1.0
+    parameters:
+      - name : source
+      - name : target
+    command :
+      - python 
+      - Model.py
+      - '-i'
+      - '{{inputs.parameters.source}}'
+      - '-t'
+      - '{{inputs.parameters.target}}'
+    mount: diabetes_model
+    mountName: data-storage
+  - name : synthea
+    image : syntheadata:1.0
+    parameters :
+      - name : population
+    command :
+      - java 
+      - "-jar"
+      - "./synthea-with-dependencies.jar"
+      - "-c"
+      - "./synthea.properties"
+      - p
+      - '{{inputs.parameters.population}}'
+    mount: mounted
+    mountName: data-storage
+  - name : streamit
+    image : streamit:1.0
+    command :
+      - streamlit
+      - run 
+      - app.py
+    mount: streamlit_app
+    mountName: data-storage
+Volumnes:
+  - name: data-storage
+    path: /C/work/argo/ml/article
